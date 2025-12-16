@@ -7,7 +7,7 @@ class Solution {
         for(int[] row : prerequisites){
             int u = row[0];
             int v = row[1];
-            adj.get(u).add(v);
+            adj.get(v).add(u);
         }
 
         int[] indegree = new int[numCourses];
