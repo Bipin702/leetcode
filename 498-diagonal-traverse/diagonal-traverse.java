@@ -3,25 +3,30 @@ class Solution {
         int n = mat.length;
         int m = mat[0].length;
 
-        HashMap<Integer,List<Integer>> map = new HashMap<>();
+        HashMap<Integer, List<Integer>> map = new HashMap<>();
 
-        for(int i = 0; i < n; i++){
-            for(int j = 0; j < m; j++){
-                map.putIfAbsent(i+j, new ArrayList<>());
-                map.get(i+j).add(mat[i][j]);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                map.putIfAbsent(i + j, new ArrayList<>());
+                map.get(i + j).add(mat[i][j]);
             }
         }
 
-        List<Integer> ans = new ArrayList<>();
+        int[] result = new int[n * m];
+        int index = 0;
 
-        for(int i = 0; i < map.size(); i++){
-            List<Integer> diag = map.get(i);
+        for (int d = 0; d <= n + m - 2; d++) {
+            List<Integer> diagonal = map.get(d);
 
-            if(i % 2 == 0) Collections.reverse(diag);
+            if (d % 2 == 0) {
+                Collections.reverse(diagonal);
+            }
 
-            ans.addAll(diag);
+            for (int val : diagonal) {
+                result[index++] = val;
+            }
         }
 
-        return ans.stream().mapToInt(x -> x).toArray();
+        return result;
     }
 }
