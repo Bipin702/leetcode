@@ -5,18 +5,26 @@ class Solution {
         Arrays.sort(nums);
         int[] ans = new int[m];
 
+        for(int i = 1; i < n; i++){
+            nums[i] = nums[i] + nums[i-1];
+        }
+
         for(int i = 0; i < m; i++){
-            int sum = 0;
-            int count = 0;
-            for(int j = 0; j < n; j++){
-                if(sum + nums[j] <= queries[i]){
-                    sum += nums[j];
-                    count++;
+            int result = 0;
+            int start = 0;
+            int end = n-1;
+
+            while(start <= end){
+                int mid = start+(end-start)/2;
+
+                if(nums[mid] <= queries[i]){
+                    result = mid+1;
+                    start = mid+1;
                 }else{
-                    break;
+                    end = mid-1;
                 }
             }
-            ans[i] = count;
+            ans[i] = result;
         }
         return ans;
     }
