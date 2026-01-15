@@ -6,24 +6,21 @@ class Solution {
         for(int num : nums) sum += num;
 
         int target = sum-x;
-        if(target == 0) return n;
+        if(target < 0) return -1;
         int maxLen = -1;
-
-        HashMap<Integer,Integer> map = new HashMap<>();
-        map.put(0,-1);
+        int left = 0;
         int currentSum = 0;
 
-        for(int i =0; i < n; i++){
-            currentSum += nums[i];
+        for(int right = 0; right < n; right++){
+            currentSum += nums[right];
 
-            int remaining = currentSum - target;
-
-            if(map.containsKey(remaining)){
-                maxLen = Math.max(maxLen, i- map.get(remaining));
+            while(currentSum > target && left <= right){
+                currentSum -= nums[left];
+                left++;
             }
 
-            if(!map.containsKey(currentSum)){
-                map.put(currentSum,i);
+            if(currentSum == target){
+                maxLen = Math.max(maxLen, right-left+1);
             }
         }
         return maxLen == -1 ? -1 : n - maxLen;
