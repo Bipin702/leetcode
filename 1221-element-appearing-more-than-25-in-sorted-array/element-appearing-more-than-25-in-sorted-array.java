@@ -2,15 +2,11 @@ class Solution {
     public int findSpecialInteger(int[] arr) {
         int n = arr.length;
         int element = 0;
-        HashMap<Integer,Integer> map = new HashMap<>();
+        int freq = n/4;
 
-        for(int num : arr){
-            map.put(num, map.getOrDefault(num,0)+1);
-        }
-
-        for(Map.Entry<Integer,Integer> entry : map.entrySet()){
-            if(entry.getValue() > n/4){
-                element = entry.getKey();
+        for(int i = 0; i < n-freq; i++){
+            if(arr[i] == arr[i+freq]){
+                element = arr[i];
             }
         }
         return element;
