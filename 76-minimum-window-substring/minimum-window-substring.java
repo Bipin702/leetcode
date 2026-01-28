@@ -2,35 +2,49 @@ class Solution {
     public String minWindow(String s, String t) {
         int n = s.length();
         int m = t.length();
-        int left = 0;
-        int r = 0;
-        int[] hash = new int[256];
-        int startIndex = -1;
-        int minLen = Integer.MAX_VALUE;
-        int count = 0;
-        for(char c : t.toCharArray()){
-            hash[c]++;
+
+        if(m > n) return "";
+
+        int minLength = Integer.MAX_VALUE;
+        int start_i = 0;
+
+        int countReq = t.length();
+        HashMap<Character,Integer> map = new HashMap<>();
+
+        for(int i = 0; i < m; i++){
+            char ch = t.charAt(i);
+            map.put(ch,map.getOrDefault(ch,0)+1);
         }
 
-        char[] chS = s.toCharArray();
+        int i = 0;
+        int j = 0;
 
-        while(r < n){
-            if(hash[chS[r]] > 0){
-                count++;
+        while(j < n){
+            char ch = s.charAt(j);
+
+            if(map.containsKey(ch) && map.get(ch) > 0){
+                countReq--;
             }
-            hash[chS[r]]--;
 
-            while(count == m){
-                if(r-left+1 < minLen){
-                    minLen = r-left+1;
-                    startIndex = left;
+            map.put(ch,map.getOrDefault(ch,0)-1);
+
+            while(countReq == 0){
+                int windowSize = j - i + 1;
+
+                if(windowSize < minLength){
+                    minLength = windowSize;
+                    start_i = i;
                 }
-                hash[chS[left]]++;
-                if(hash[chS[left]] > 0) count--;
-                left++;
+
+                map.put(s.charAt(i),map.get(s.charAt(i))+1);
+
+                if(map.get(s.charAt(i)) > 0){
+                    countReq++;
+                }
+                i++;
             }
-            r++;
+            j++;
         }
-        return startIndex == -1 ? "" : s.substring(startIndex,startIndex+minLen);
+        return minLength == Integer.MAX_VALUE ? "" : s.substring(start_i,start_i+minLength);
     }
 }
