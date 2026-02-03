@@ -16,7 +16,6 @@ class Solution {
             totalSum += num;
         }
 
-        // if all numbers are negative
         if(maxSum < 0) return maxSum;
 
         return Math.max(maxSum, totalSum-minSum);
