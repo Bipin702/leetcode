@@ -1,27 +1,19 @@
 class Solution {
-    static {
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            try (FileWriter writer = new FileWriter("display_runtime.txt")) {
-                writer.write("0");
-            } catch (IOException e) {
-            }
-        }));
-    }
     public List<List<Integer>> subsetsWithDup(int[] nums) {
         Arrays.sort(nums);
-        List<List<Integer>> outer = new ArrayList<>();
-        outer.add(new ArrayList<>());
 
+        List<List<Integer>> ans = new ArrayList<>();
+        ans.add(new ArrayList<>());
         for(int num : nums){
-            int n = outer.size();
+            int n = ans.size();
             for(int i = 0; i < n; i++){
-                List<Integer> inner = new ArrayList<>(outer.get(i));
+                List<Integer> inner = new ArrayList<>(ans.get(i));
                 inner.add(num);
-                if (!outer.contains(inner)) {
-                    outer.add(inner);
+                if(!ans.contains(inner)){
+                    ans.add(inner);
                 }
             }
         }
-        return outer;
+        return ans;
     }
 }
