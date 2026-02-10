@@ -2,39 +2,27 @@ class Solution {
     public List<String> generateParenthesis(int n) {
         List<String> ans = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
-
-        solve(ans,n,sb);
+        int open = 0;
+        int close = 0;
+        solve(ans,n,sb,open,close);
         return ans;
     }
 
-    public void solve(List<String> ans, int n, StringBuilder sb){
+    public void solve(List<String> ans, int n, StringBuilder sb, int open , int close){
         if(sb.length() == 2*n){
-            if(isValid(sb.toString()))
             ans.add(sb.toString());
             return;
         }
 
-        sb.append("(");
-        solve(ans,n,sb);
-        sb.deleteCharAt(sb.length()-1);
-        sb.append(")");
-        solve(ans,n,sb);
-        sb.deleteCharAt(sb.length()-1);
-    }
-
-    public boolean isValid(String str){
-        Stack<Character> st = new Stack<>();
-
-        for(char ch : str.toCharArray()){
-            if(ch == '('){
-                st.push(ch);
-            }else{
-                if(st.isEmpty()) return false;
-                st.pop();
-            }
+        if(open < n){
+            sb.append("(");
+            solve(ans,n,sb,open+1,close);
+            sb.deleteCharAt(sb.length()-1);
         }
-        if(st.isEmpty()) return true;
-
-        return false;
+        if(close < open){
+            sb.append(")");
+            solve(ans,n,sb,open,close+1);
+            sb.deleteCharAt(sb.length()-1);
+        }
     }
 }
