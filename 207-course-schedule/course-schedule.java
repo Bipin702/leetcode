@@ -4,38 +4,35 @@ class Solution {
 
         for(int i = 0; i < numCourses; i++) adj.add(new ArrayList<>());
 
-        for(int[] row : prerequisites){
-            int u = row[0];
-            int v = row[1];
-            adj.get(v).add(u);
+        for(int[] pre : prerequisites){
+            int u = pre[0];
+            int v = pre[1];
+            adj.get(u).add(v);
         }
 
         int[] indegree = new int[numCourses];
 
         for(int i = 0; i < numCourses; i++){
-            for(int neighbor : adj.get(i)){
-                indegree[neighbor]++;
-            }
+            for(int node : adj.get(i)) indegree[node]++;
         }
-
         Queue<Integer> q = new LinkedList<>();
         for(int i = 0; i < numCourses; i++){
             if(indegree[i] == 0) q.add(i);
         }
 
-        int count = 0;
         while(!q.isEmpty()){
             int node = q.poll();
-            count++;
 
             for(int neighbor : adj.get(node)){
                 indegree[neighbor]--;
-                if(indegree[neighbor] == 0){
-                    q.add(neighbor);
-                }
+                if(indegree[neighbor] == 0)
+                q.add(neighbor);
             }
         }
-        if(count == numCourses) return true;
-        return false;
+        
+        for(int i = 0; i < numCourses; i++){
+            if(indegree[i] != 0) return false;
+        }
+        return true;
     }
 }
