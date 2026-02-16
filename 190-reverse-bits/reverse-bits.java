@@ -1,12 +1,12 @@
 class Solution {
     public int reverseBits(int n) {
-        StringBuilder sb = new StringBuilder();
-        for(int i=0 ; i<32 ; i++){
-            int r=n%2;
-            if(r<0) r+=2;
-            sb.append(r);
-            n/=2;
+        if(n == 0) return 0;
+        int result = 0;
+        for(int i = 1 ; i<= 32 ; i++){
+            result <<= 1;
+            result = (result | (n&1));
+            n >>= 1;
         }
-        return (int) Long.parseLong(sb.toString(),2);
+        return result;
     }
 }
