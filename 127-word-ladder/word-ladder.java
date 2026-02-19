@@ -1,20 +1,17 @@
 class Solution {
     class Pair{
         String word;
-        int length;
+        int time;
 
-        Pair(String word, int length){
+        Pair(String word, int time){
             this.word = word;
-            this.length = length;
+            this.time = time;
         }
     }
     public int ladderLength(String beginWord, String endWord, List<String> wordList) {
         HashSet<String> set = new HashSet<>();
 
-        for(String string : wordList){
-            set.add(string);
-        }
-
+        for(String list : wordList) set.add(list);
         set.remove(beginWord);
 
         Queue<Pair> q = new LinkedList<>();
@@ -22,22 +19,22 @@ class Solution {
 
         while(!q.isEmpty()){
             Pair p = q.poll();
-            String Word = p.word;
-            int dist = p.length;
+            String begin = p.word;
+            int tm = p.time;
+            if(begin.equals(endWord)) return tm;
 
-            if(Word.equals(endWord)) return dist;
-
-            for(int i = 0; i < Word.length(); i++){
+            for(int i = 0; i < begin.length();i++){
                 for(char ch = 'a'; ch <= 'z'; ch++){
-                    char[] replacedWord = Word.toCharArray();
-                    replacedWord[i] = ch;
-                    String newWord = new String(replacedWord);
+                    char[] replaced = begin.toCharArray();
+                    replaced[i] = ch;
+                    String newWord = new String(replaced);
+
                     if(set.contains(newWord)){
                         set.remove(newWord);
-                        q.add(new Pair(newWord,dist+1));
+                        q.add(new Pair(newWord,tm+1));
                     }
                 }
-            } 
+            }
         }
         return 0;
     }
