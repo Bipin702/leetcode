@@ -1,21 +1,21 @@
 class Solution {
     class Pair{
-        int stop;
+        int node;
         int price;
 
-        Pair(int stop , int price){
-            this.stop = stop ;
+        Pair(int node, int price){
+            this.node = node;
             this.price = price;
         }
     }
 
     class Tuple{
-        int stop;
+        int stops;
         int node;
         int price;
 
-        Tuple(int stop, int node, int price){
-            this.stop = stop;
+        Tuple(int stops, int node, int price){
+            this.stops = stops;
             this.node = node;
             this.price = price;
         }
@@ -25,39 +25,37 @@ class Solution {
 
         for(int i = 0; i < n; i++) adj.add(new ArrayList<>());
 
-        for(int[] flight : flights){
-            int u = flight[0];
-            int v = flight[1];
-            int price = flight[2];
+        for(int[] edge : flights){
+            int u = edge[0];
+            int v = edge[1];
+            int price = edge[2];
+
             adj.get(u).add(new Pair(v,price));
-            // adj.get(v).add(new Pair(u,price));
         }
 
+        Queue<Tuple> q = new LinkedList<>();
+        q.add(new Tuple(0,src,0));
         int[] dist = new int[n];
-
-        for(int i = 0; i < n; i++) dist[i] = (int) 1e9;
-
+        Arrays.fill(dist,(int)1e9);
         dist[src] = 0;
+        while(!q.isEmpty()){
+            Tuple t = q.poll();
+            int nodes = t.node;
+            int stop = t.stops;
+            int fare = t.price;
 
-        Queue<Tuple> pq = new LinkedList<>();
-        pq.offer(new Tuple(0,src,0));
+            if(stop > k) continue;
 
-        while(!pq.isEmpty()){
-            Tuple t = pq.poll();
-            int stops = t.stop;
-            int node = t.node;
-            int weight = t.price;
-
-            if(stops > k) continue;
-
-            for(Pair neighbor : adj.get(node)){
-                if(weight + neighbor.price < dist[neighbor.stop]){
-                    dist[neighbor.stop] = weight + neighbor.price;
-                    pq.offer(new Tuple(stops+1, neighbor.stop,dist[neighbor.stop]));
+            for(Pair neighbor : adj.get(nodes)){
+                if(fare + neighbor.price < dist[neighbor.node]){
+                    dist[neighbor.node] = fare + neighbor.price;
+                    q.add(new Tuple(stop+1,neighbor.node,dist[neighbor.node]));
                 }
             }
         }
-        if(dist[dst] == (int)1e9) return -1;
+        for(int i = 0; i < n; i++){
+            if(dist[i] == (int)1e9) dist[i] = -1;
+        }
         return dist[dst];
     }
 }
