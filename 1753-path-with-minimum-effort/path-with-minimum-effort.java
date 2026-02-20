@@ -2,51 +2,51 @@ class Solution {
     class Pair{
         int row;
         int col;
-        int difference;
+        int weight;
 
-        Pair(int row, int col, int difference){
+        Pair(int row, int col, int weight){
             this.row = row;
             this.col = col;
-            this.difference = difference;
+            this.weight = weight;
         }
     }
     public int minimumEffortPath(int[][] heights) {
         int n = heights.length;
         int m = heights[0].length;
 
-        int[][] dist = new int[n][m];
-
-        for(int i = 0; i < n; i++){
-            for(int j = 0; j < m; j++){
-                dist[i][j] = (int)1e9;
-            }
+        int[][] distance = new int[n][m];
+        for(int[] row : distance){
+            Arrays.fill(row,(int)1e9);
         }
-        dist[0][0] = 0;
-        PriorityQueue<Pair> pq = new PriorityQueue<>((a,b) -> a.difference - b.difference);
-        pq.offer(new Pair(0,0,0));
+        PriorityQueue<Pair> pq = new PriorityQueue<>((a,b) -> a.weight-b.weight);
+        pq.add(new Pair(0,0,0));
+
         int[] delRow = {-1,0,1,0};
         int[] delCol = {0,1,0,-1};
+
         while(!pq.isEmpty()){
             Pair p = pq.poll();
-            int rows = p.row;
-            int cols = p.col;
-            int diff = p.difference;
+            int r = p.row;
+            int c = p.col;
+            int diff = p.weight;
 
-            if(rows == n-1 && cols == m-1) return diff;
+            if(r == n-1 && c == m-1) return diff;
 
             for(int i = 0; i < 4; i++){
-                int nRow = rows + delRow[i];
-                int nCol = cols + delCol[i];
+                int nRow = r + delRow[i];
+                int nCol = c + delCol[i];
 
-                if(nRow < n && nRow >= 0 && nCol < m && nCol >= 0){
-                    int effort = Math.max(Math.abs(heights[rows][cols] - heights[nRow][nCol]),diff);
-                    if(dist[nRow][nCol] > effort){
-                        dist[nRow][nCol] = effort;
-                        pq.offer(new Pair(nRow,nCol,effort));
+                if(nRow >= 0 && nRow < n && nCol >= 0 && nCol < m){
+                    int newEffort = Math.max(Math.abs(heights[nRow][nCol] - heights[r][c]),diff);
+                    if(newEffort < distance[nRow][nCol]){
+                    distance[nRow][nCol] = newEffort;
+
+                    pq.add(new Pair(nRow,nCol,newEffort));
                     }
+
                 }
             }
         }
-        return 0;
+        return 1;
     }
 }
