@@ -1,14 +1,13 @@
 class Solution {
     class Pair{
-        int node;
+        int vertex;
         long weight;
 
-        Pair(int node, long weight){
-            this.node = node;
+        Pair(int vertex, long weight){
+            this.vertex = vertex;
             this.weight = weight;
         }
     }
-
     public int countPaths(int n, int[][] roads) {
         int mod = (int)1e9+7;
         List<List<Pair>> adj = new ArrayList<>();
@@ -25,32 +24,31 @@ class Solution {
         }
 
         long[] dist = new long[n];
-        for(int i = 0; i < n; i++){
-            dist[i] = Long.MAX_VALUE;
-        }
-        dist[0] = 0;
         int[] ways = new int[n];
-        Arrays.fill(ways,0);
+        Arrays.fill(dist,Long.MAX_VALUE);
+        dist[0] = 0;
         ways[0] = 1;
+
         Queue<Pair> pq = new PriorityQueue<>((a,b) -> Long.compare(a.weight,b.weight));
-        pq.offer(new Pair(0,0));
+        pq.add(new Pair(0,0));
 
         while(!pq.isEmpty()){
             Pair p = pq.poll();
-            int nodes = p.node;
+            int node = p.vertex;
             long distance = p.weight;
-            if (distance > dist[nodes]) continue;
 
-            for(Pair neighbor : adj.get(nodes)){
-                if(distance + neighbor.weight < dist[neighbor.node]){
-                    dist[neighbor.node] = distance + neighbor.weight;
-                    pq.offer(new Pair(neighbor.node,dist[neighbor.node]));
-                    ways[neighbor.node] = ways[nodes];
-                }else if(distance + neighbor.weight == dist[neighbor.node]){
-                    ways[neighbor.node] = (ways[nodes] + ways[neighbor.node])%mod;
+            if(distance > dist[node]) continue;
+
+            for(Pair neighbor : adj.get(node)){
+                if(dist[node] + neighbor.weight < dist[neighbor.vertex]){
+                    dist[neighbor.vertex] = dist[node] + neighbor.weight;
+                    pq.add(new Pair(neighbor.vertex,dist[neighbor.vertex]));
+                    ways[neighbor.vertex] = ways[node];
+                }else if(dist[node] + neighbor.weight == dist[neighbor.vertex]){
+                    ways[neighbor.vertex] = (ways[node] + ways[neighbor.vertex]) % mod;
                 }
             }
         }
-        return ways[n-1]%mod;
+        return ways[n-1];
     }
 }
