@@ -1,23 +1,23 @@
-class Disjoint{
-    List<Integer> parent;
-    List<Integer> size;
+class DisjointSet{
+    ArrayList<Integer> parent;
+    ArrayList<Integer> size;
 
-    Disjoint(int n){
+    DisjointSet(int n){
         parent = new ArrayList<>();
         size = new ArrayList<>();
 
-        for(int i = 0; i < n; i++){
+        for(int i = 0; i <= n; i++){
             parent.add(i);
             size.add(1);
         }
     }
 
-    public int findParent(int node){
-        if(node == parent.get(node)) return node;
+    public int findParent(int u){
+        if(u == parent.get(u)) return u;
 
-        int ulp = findParent(parent.get(node));
+        int ulp = findParent(parent.get(u));
 
-        parent.set(node,ulp);
+        parent.set(u,ulp);
         return ulp;
     }
 
@@ -29,17 +29,17 @@ class Disjoint{
 
         if(size.get(ulpU) < size.get(ulpV)){
             parent.set(ulpU,ulpV);
-            size.set(ulpV,size.get(ulpU) + size.get(ulpV));
+            size.set(ulpU,size.get(ulpU) + size.get(ulpV));
         }else{
-            parent.set(ulpV,ulpU);
-            size.set(ulpU, size.get(ulpU) + size.get(ulpV));
+            parent.set(ulpV , ulpU);
+            size.set(ulpV, size.get(ulpV) + size.get(ulpU));
         }
     }
 }
 
 class Solution {
     public int makeConnected(int n, int[][] connections) {
-        Disjoint ds = new Disjoint(n);
+        DisjointSet dsu = new DisjointSet(n);
 
         int countExtra = 0;
 
@@ -47,22 +47,23 @@ class Solution {
             int u = edge[0];
             int v = edge[1];
 
-            if(ds.findParent(u) == ds.findParent(v)){
+            if(dsu.findParent(u) == dsu.findParent(v)){
                 countExtra++;
             }else{
-                ds.UnionBySize(u,v);
+                dsu.UnionBySize(u,v);
             }
         }
 
         int countC = 0;
 
         for(int i = 0; i < n; i++){
-            if(ds.findParent(i) == i) countC++;
+            if(dsu.findParent(i) == i) countC++;
         }
 
         int ans = countC-1;
 
         if(countExtra >= ans) return ans;
+
         return -1;
     }
 }
